@@ -94,3 +94,5 @@ CREATE TABLE Banker_Loan (
     FOREIGN KEY (LoanID) REFERENCES Loan(LoanID)
 );
 
+-- SQL BANK DATABASE 
+
