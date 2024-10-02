@@ -1,0 +1,96 @@
+CREATE DATABASE Bank;
+USE Bank;
+CREATE TABLE Person (
+    PersonID INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Age INT,
+    Gender VARCHAR(10)
+);
+
+CREATE TABLE Employee (
+    EmployeeID INT PRIMARY KEY,
+    HireDate DATE,
+    Salary DECIMAL(10, 2),
+    FOREIGN KEY (EmployeeID) REFERENCES Person(PersonID)
+);
+
+
+CREATE TABLE Department (
+    DepartmentID INT AUTO_INCREMENT PRIMARY KEY,
+    DepartmentName VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Banker (
+    BankerID INT PRIMARY KEY,
+    LicenseNumber VARCHAR(50) NOT NULL,
+    DepartmentID INT,
+    FOREIGN KEY (BankerID) REFERENCES Employee(EmployeeID),
+    FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
+);
+
+CREATE TABLE Staff (
+    StaffID INT PRIMARY KEY,
+    RoleID INT,
+    FOREIGN KEY (StaffID) REFERENCES Employee(EmployeeID),
+    FOREIGN KEY (RoleID) REFERENCES Roles(RoleID)
+);
+
+CREATE TABLE Roles (
+    RoleID INT AUTO_INCREMENT PRIMARY KEY,
+    RoleName VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Customer (
+    CustomerID INT PRIMARY KEY,
+    PersonID INT,
+    AccountID INT,
+    FOREIGN KEY (PersonID) REFERENCES Person(PersonID),
+    FOREIGN KEY (AccountID) REFERENCES Accounts(AccountID)
+);
+
+CREATE TABLE Accounts (
+    AccountID INT AUTO_INCREMENT PRIMARY KEY,
+    CustomerID INT,
+    AccountNumber VARCHAR(20) UNIQUE NOT NULL,
+    Balance DECIMAL(15, 2))
+    ;
+
+alter table Accounts add
+FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID);
+
+CREATE TABLE Transactions (
+    TransactionID INT AUTO_INCREMENT PRIMARY KEY,
+    AccountID INT,
+    Description VARCHAR(255),
+    Amount DECIMAL(10, 2),
+    Date DATE,
+    FOREIGN KEY (AccountID) REFERENCES Accounts(AccountID)
+);
+
+CREATE TABLE Loan (
+    LoanID INT AUTO_INCREMENT PRIMARY KEY,
+    CustomerID INT,
+    Amount DECIMAL(15, 2) NOT NULL,
+    InterestRate DECIMAL(5, 2),
+    Duration INT,
+    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+);
+
+CREATE TABLE Appointment (
+    AppointmentID INT AUTO_INCREMENT PRIMARY KEY,
+    CustomerID INT,
+    BankerID INT,
+    AppointmentDate DATE,
+    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
+    FOREIGN KEY (BankerID) REFERENCES Banker(BankerID)
+);
+
+CREATE TABLE Banker_Loan (
+    BankerID INT,
+    LoanID INT,
+    PRIMARY KEY (BankerID, LoanID),
+    FOREIGN KEY (BankerID) REFERENCES Banker(BankerID),
+    FOREIGN KEY (LoanID) REFERENCES Loan(LoanID)
+);
+
